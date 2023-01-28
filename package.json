@@ -1,0 +1,10 @@
+{
+  "name": "tusker",
+  "version": "0.0.1",
+  "description": "desktop client for mastodon",
+  "main": "index.js",
+  "repository": "https://github.com/boboTjones/tusker",
+  "author": "boboTjones",
+  "license": "MIT",
+  "private": false
+}
