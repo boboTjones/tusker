@@ -2,9 +2,14 @@
   "name": "tusker",
   "version": "0.0.1",
   "description": "desktop client for mastodon",
-  "main": "index.js",
+  "main": "main.js",
   "repository": "https://github.com/boboTjones/tusker",
   "author": "boboTjones",
   "license": "MIT",
-  "private": false
+  "devDependencies": {
+    "electron": "^22.1.0"
+  },
+  "scripts": {
+    "start": "electron ."
+  }
 }
