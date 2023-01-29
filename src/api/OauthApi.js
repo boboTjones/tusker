@@ -108,7 +108,7 @@ export default class OauthApi {
      */
     oauthAuthorizePOST(opts, callback) {
       opts = opts || {};
-      let postBody = opts['oauthPostBody'];
+      let postBody = new OauthPostBody() || opts['oauthPostBody'];
 
       let pathParams = {
       };
@@ -181,16 +181,12 @@ export default class OauthApi {
      */
     oauthTokenPOST(opts, callback) {
       opts = opts || {};
-      let postBody = opts['oauthPostBody'];
+      let postBody = new OauthPostBody() || opts['oauthPostBody'];
 
-      let pathParams = {
-      };
-      let queryParams = {
-      };
-      let headerParams = {
-      };
-      let formParams = {
-      };
+      let pathParams = {};
+      let queryParams = {};
+      let headerParams = {};
+      let formParams = {};
 
       let authNames = [];
       let contentTypes = ['application/form-data'];
