@@ -1,3 +1,4 @@
+---
 openapi: 3.0.0
 info:
   title: Mastodon API
@@ -7,8 +8,8 @@ info:
     email: erin@sockpuppet.org
   version: 1.0.0
 tags:
-- name: mastodon
-  description: mastodon api https://docs.joinmastodon.org/methods/
+  - name: mastodon
+    description: mastodon api https://docs.joinmastodon.org/methods/
 paths:
   /:
     get:
@@ -19,146 +20,166 @@ paths:
       x-swagger-router-controller: ""
   /health:
     get:
-      summary: "Health check"
-      description: "Not part of the API but possibly useful."
+      summary: Health check
+      description: Not part of the API but possibly useful.
       operationId: healthGET
       responses:
         "200":
-          description: "OK"
+          description: OK
           content:
             text/plain:
               schema:
                 type: string
                 x-content-type: text/plain
         "400":
-          description: "Unlikely to happen but you never know"
+          description: Unlikely to happen but you never know
       x-swagger-router-controller: Base
   /oauth/authorize:
-    description: "Authorize a user."
+    description: Authorize a user.
     get:
       tags:
-      - oauth
+        - oauth
       operationId: oauthAuthorizeGET
       parameters:
-      - name: response_type
-        in: query
-        description: "Should be set equal to code."
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-          enum:
-          - code
-      - name: client_id
-        in: query
-        description: "The client ID, obtained during app registration."
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: redirect_uri
-        in: query
-        description: "Set a URI to redirect the user to. If this parameter is set to urn:ietf:wg:oauth:2.0:oob then the authorization code will be shown instead. Must match one of the redirect_uris declared during app registration."
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: scope
-        in: query
-        description: "List of requested OAuth scopes, separated by spaces (or by pluses, if using query parameters). Must be a subset of scopes declared during app registration. If not provided, defaults to read."
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: force_login
-        in: query
-        description: "Forces the user to re-login, which is necessary for authorizing with multiple accounts from the same instance."
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: boolean
+        - name: response_type
+          in: query
+          description: Should be set equal to code.
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+            enum:
+              - code
+        - name: client_id
+          in: query
+          description: The client ID, obtained during app registration.
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: redirect_uri
+          in: query
+          description: Set a URI to redirect the user to. If this parameter is set to
+            urn:ietf:wg:oauth:2.0:oob then the authorization code will be shown
+            instead. Must match one of the redirect_uris declared during app
+            registration.
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: scope
+          in: query
+          description: List of requested OAuth scopes, separated by spaces (or by pluses,
+            if using query parameters). Must be a subset of scopes declared
+            during app registration. If not provided, defaults to read.
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: force_login
+          in: query
+          description: Forces the user to re-login, which is necessary for authorizing
+            with multiple accounts from the same instance.
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: boolean
       responses:
         "200":
-          description: "Prefix: oauth_authorization Controller#Action oauth/authorizations#new"
+          description: "Prefix: oauth_authorization Controller#Action
+            oauth/authorizations#new"
         "400":
-          description: "If the authorization code is incorrect or has been used already, the request will fail."
+          description: If the authorization code is incorrect or has been used already,
+            the request will fail.
       x-swagger-router-controller: Oauth
     post:
       tags:
-      - oauth
+        - oauth
       operationId: oauthAuthorizePOST
-     requestBody:
+      requestBody:
         content:
           application/form-data:
             schema:
-              $ref: '#/components/schemas/oauth_post_body' 
+              $ref: "#/components/schemas/oauth_post_body"
       responses:
         "200":
           description: "Prefix:  Controller#Action oauth/authorizations#create"
         "400":
-          description: "If you try to request a scope that was not included when registering the app, the request will fail."
+          description: If you try to request a scope that was not included when
+            registering the app, the request will fail.
         "401":
-          description: "If client_id and client_secret do not match or are invalid, the request will fail."
+          description: If client_id and client_secret do not match or are invalid, the
+            request will fail.
       x-swagger-router-controller: Authorize
   /oauth/token:
     post:
       tags:
-      - oauth
-      description: "Obtain an access token, to be used during API calls that are not public."
+        - oauth
+      description: Obtain an access token, to be used during API calls that are not public.
       operationId: oauthTokenPOST
       requestBody:
         content:
           application/form-data:
             schema:
-              $ref: '#/components/schemas/oauth_post_body'
+              $ref: "#/components/schemas/oauth_post_body"
       responses:
         "200":
           description: "Prefix: oauth_token Controller#Action oauth/tokens#create"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/response_200'
+                $ref: "#/components/schemas/response_200"
       x-swagger-router-controller: Authorize
   /oauth/revoke:
     post:
       tags:
-      - oauth
+        - oauth
       operationId: oauthRevokePOST
       responses:
         "200":
           description: "Prefix: oauth_revoke Controller#Action oauth/tokens#revoke"
       x-swagger-router-controller: Authorize
+components:
+  schemas:
     oauth_post_body:
       required:
-      - client_id
-      - client_secret
-      - grant_type
-      - redirect_uri
+        - client_id
+        - client_secret
+        - grant_type
+        - redirect_uri
       type: object
       properties:
         grant_type:
           type: string
-          description: "Set equal to authorization_code if code is provided in order to gain user-level access. Otherwise, set equal to client_credentials to obtain app-level access only."
+          description: Set equal to authorization_code if code is provided in order to
+            gain user-level access. Otherwise, set equal to client_credentials
+            to obtain app-level access only.
         client_id:
           type: string
-          description: "Client ID, obtained during app registration"
+          description: Client ID, obtained during app registration
         client_secret:
           type: string
-          description: "Client secret, obtained during app registration"
+          description: Client secret, obtained during app registration
         redirect_uri:
           type: string
-          description: "Set a URI to redirect the user to. If this parameter is set to urn:ietf:wg:oauth:2.0:oob then the token will be shown instead. Must match one of the redirect_uris declared during app registration."
+          description: Set a URI to redirect the user to. If this parameter is set to
+            urn:ietf:wg:oauth:2.0:oob then the token will be shown instead. Must
+            match one of the redirect_uris declared during app registration.
         scope:
           type: string
-          description: " List of requested OAuth scopes, separated by spaces (or by pluses, if using query parameters). If code was provided, then this must be equal to the scope requested from the user. Otherwise, it must be a subset of scopes declared during app registration. If not provided, defaults to read."
+          description: " List of requested OAuth scopes, separated by spaces (or by
+            pluses, if using query parameters). If code was provided, then this
+            must be equal to the scope requested from the user. Otherwise, it
+            must be a subset of scopes declared during app registration. If not
+            provided, defaults to read."
         code:
           type: string
-          description: "A user authorization code, obtained via /oauth/authorize"
+          description: A user authorization code, obtained via /oauth/authorize
     response_200:
       type: object
       properties:
@@ -185,4 +206,3 @@ paths:
       properties:
         error:
           type: string
-   
